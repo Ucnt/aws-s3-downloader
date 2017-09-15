@@ -17,7 +17,8 @@ def download_bucket(bucket):
     if "<Endpoint>" in request.text:
         redirect_link = "https://{endpoint}".format(endpoint=re.search("<Endpoint>(.+?)</Endpoint>", request.text).group(1))
         # print "-->> {url} redirected to {redirect_link}".format(url=url, redirect_link=redirect_link)
-        scrape_bucket(redirect_link)
+        bucket.url = redirect_link
+        download_bucket(bucket)
 
     else:
         print "Total: {num_keys} keys found".format(num_keys=len(re.findall("<Key>(.+?)</Key>", request.text)))
@@ -83,7 +84,7 @@ def save_xml(bucket, xml):
     xml = xml.replace("</ListBucketResult>","")
 
     """Save the XML (e.g. page source code) for the bucket"""
-    f = open(bucket.xml_output_file, "w+")
+    f = open(bucket.xml_output_file, "a+")
     if not f.read(1):
         f.write('''<?xml version="1.0" encoding="UTF-8"?><ListBucketResult>''')
     f.write('''\n{xml}'''.format(xml=xml))
@@ -119,7 +120,7 @@ if __name__ == "__main__":
         else:
             output_folder = '{cur_dir}/{bucket_name}'.format(cur_dir=os.path.dirname(os.path.realpath(__file__)),bucket_name=args.bucket_name)
 
-        download_bucket(Bucket(
+        download_bucket(bucket=Bucket(
                              url="https://s3.amazonaws.com/{bucket_name}".format(bucket_name=args.bucket_name), 
                              download=args.download, 
                              download_include=args.download_include,
