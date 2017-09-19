@@ -20,4 +20,4 @@ Download where "test" is in the key but "exclude me" is not in the key<br>
 # Notes
 - If a file is private, the download will be the XML saying that file access is denies
 - Some keys are just folder names, these will not be downloaded but the keys within the bucket will (e.g. a key could be "folder/" but there will be keys with content like "folder/file1")
-- You can add multiple "-i" or "-e" parameters.  Each set of "-i" and "-e" parameters will be OR'd and the "-i" and "-e" parameters are AND'd together.
+- You can add multiple "-i" or "-e" parameters.  Each set of "-i" and "-e" parameters will be OR'd and the "-i" and "-e" parameters are AND'd together.  These are case insensitive

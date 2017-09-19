@@ -42,7 +42,7 @@ parser.add_argument(
                     '-i',
                     '--download_include',
                     required=False, 
-                    help="Only download keys that include any of these strings (case sensitive), can add multiple parameters",
+                    help="Only download keys that include any of these strings (case insensitive), can add multiple parameters",
                     action='append',
                    )
 
@@ -51,7 +51,7 @@ parser.add_argument(
                     '-e',
                     '--download_exclude',
                     required=False, 
-                    help="Exclude downloading keys that include any of these strings (case sensitive), can add multiple parameters",
+                    help="Exclude downloading keys that include any of these strings (case insensitive), can add multiple parameters",
                     action='append',
                    )
 
