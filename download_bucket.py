@@ -62,6 +62,8 @@ def download_files(bucket, keys):
                     #Create the directory if it doesn't exist (needed for sub-directories)
                     if not os.path.exists(file_name):
                         os.makedirs(file_name)
+                        os.rmdir(file_name)
+
 
                     #Try to download the file.  Some will fail because they are directories
                     try:
