@@ -56,4 +56,20 @@ parser.add_argument(
                    )
 
 
+parser.add_argument(
+                    '-ak',
+                    '--aws_access_key',
+                    required=False, 
+                    help="AWS Access Key",
+                   )
+
+
+parser.add_argument(
+                    '-sk',
+                    '--aws_secret_key',
+                    required=False, 
+                    help="AWS Secret Key",
+                   )
+
+
 args = parser.parse_args()

@@ -17,6 +17,10 @@ Download only where "test" is in the key and get all of the XML<br>
 Download where "test" is in the key but "exclude me" is not in the key<br>
 ./download_bucket.py -n [bucket_name] -d -i test -e "exclude me"
 
+Download using an API key (e.g. for buckets that allow any authenticated user to access it)
+./download_bucket.py -n [bucket_name] -d -ak "AWS_ACCESS_KEY" -sk "AWS_SECRET_KEY"
+
+
 # Notes
 - If a file is private, the download will be the XML saying that file access is denies
 - Some keys are just folder names, these will not be downloaded but the keys within the bucket will (e.g. a key could be "folder/" but there will be keys with content like "folder/file1")
