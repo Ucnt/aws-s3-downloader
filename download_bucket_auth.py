@@ -43,5 +43,5 @@ def save_xml(bucket, key_name):
 
     """Save the XML (e.g. page source code) for the bucket"""
     f = open(bucket.xml_output_file.replace(".xml",".txt"), "a+")
-    f.write('''%s\n''' % (key_name))
+    f.write('''%s\n''' % (key_name.encode('utf-8').strip()))
     f.close()
