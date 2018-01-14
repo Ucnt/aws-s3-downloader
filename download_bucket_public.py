@@ -69,7 +69,9 @@ def download_files(bucket, keys):
                         url = '{url}/{key}'.format(url=bucket.url, key=key)
                         print "  Downloading %s" % (url)
                         urllib.urlretrieve(url, file_name)
+                        print "    FINISHED"
                     except IOError:
+                        print "    FAIL: %s - %s" % (key, e)
                         pass
         else:
             print "  already downloaded {file_name}".format(file_name=file_name)
