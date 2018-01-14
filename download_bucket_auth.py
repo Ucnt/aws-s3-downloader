@@ -6,33 +6,42 @@ import os
 def download_bucket_auth(bucket):
     conn = S3Connection(bucket.aws_access_key, bucket.aws_secret_key)
     try:
+        print "  connecting to bucket"
         bucket_conn = conn.get_bucket(bucket.bucket_name)
-        for key in bucket_conn.list():
+        print "  enumerating keys"
+        for index, key in enumerate(bucket_conn.list()):
+#            if index >= 200000:
+#               break
             if bucket.get_xml:
                 save_xml(bucket=bucket, key_name=key.name)
             if bucket.download:
-                file_name = '{output_folder}/{key}'.format(output_folder=bucket.output_folder, key=key.name).strip()
+                file_name = '{output_folder}/{key}'.format(output_folder=bucket.output_folder, key=key.name.encode('utf-8').strip()).strip()
                 if not os.path.exists(file_name):
                     if not bucket.download_include or any(include.lower() in key.name.lower() for include in bucket.download_include):
                         if not bucket.download_exclude or not any(exclude.lower() in key.name.lower() for exclude in bucket.download_exclude):
                             #Create the directory if it doesn't exist (needed for sub-directories)
-                            if not os.path.exists(file_name):
-                                os.makedirs(file_name)
-                                os.rmdir(file_name)
+                            try:
+                                if not os.path.exists(file_name):
+                                    os.makedirs(file_name)
+                                    os.rmdir(file_name)
+                            except Exception as e:
+                                print "    Error (%s) on folder creation: %s" % (e, file_name)
+                                continue
 
                             #Try downloading the file
                             try:
+                                print "  DOWNLOADING: %s" % (key.name)
                                 key.get_contents_to_filename(file_name)
-                                print "  SUCCESS: %s" % (key.name)
+                                print "      FINISHED"
                             except Exception as e:
                                 if "Access Denied" in str(e):
-                                    print "  FAIL: %s - Access Denied" % (key.name)
+                                    print "    FAIL: %s - Access Denied" % (key.name)
                                 else:
-                                    print "  FAIL: %s - %s" % (key.name, e)
+                                    print "    FAIL: %s - %s" % (key.name, e)
                 else:
                     print "  already downloaded {file_name}".format(file_name=file_name)
     except Exception as e:
-        print e
+       print e
 
 
 def save_xml(bucket, key_name):
@@ -43,5 +52,12 @@ def save_xml(bucket, key_name):
 
     """Save the XML (e.g. page source code) for the bucket"""
     f = open(bucket.xml_output_file.replace(".xml",".txt"), "a+")
+<<<<<<< HEAD
+    try:
+        f.write('''%s\n''' % (key_name))
+    except:
+        f.write('''%s\n''' % (key_name.encode('utf-8').strip()))
+=======
     f.write('''%s\n''' % (key_name.encode('utf-8').strip()))
+>>>>>>> ffa5a8d66f83b296a00fff3333ba485d2e420751
     f.close()
