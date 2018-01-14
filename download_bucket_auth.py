@@ -52,12 +52,9 @@ def save_xml(bucket, key_name):
 
     """Save the XML (e.g. page source code) for the bucket"""
     f = open(bucket.xml_output_file.replace(".xml",".txt"), "a+")
-<<<<<<< HEAD
     try:
         f.write('''%s\n''' % (key_name))
     except:
         f.write('''%s\n''' % (key_name.encode('utf-8').strip()))
-=======
-    f.write('''%s\n''' % (key_name.encode('utf-8').strip()))
->>>>>>> ffa5a8d66f83b296a00fff3333ba485d2e420751
-    f.close()
+        f.write('''%s\n''' % (key_name.encode('utf-8').strip()))
+        f.close()
