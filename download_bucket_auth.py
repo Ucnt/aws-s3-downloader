@@ -13,8 +13,8 @@ def download_bucket_auth(bucket):
         bucket_conn = conn.get_bucket(bucket.bucket_name)
         print "  enumerating keys"
         for index, key in enumerate(bucket_conn.list()):
-            if index >= 200000:
-               break
+#            if index >= 200000:
+#               break
             if bucket.get_xml:
                 save_xml(bucket=bucket, key_name=key.name)
             if bucket.download:
