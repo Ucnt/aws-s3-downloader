@@ -90,6 +90,7 @@ def save_xml(bucket, xml):
     f = open(bucket.xml_output_file, "a+")
     if not f.read(1):
         f.write('''<?xml version="1.0" encoding="UTF-8"?><ListBucketResult>''')
+    f.seek(0,2)    #Windows Fix
     f.write('''\n{xml}'''.format(xml=xml))
     f.close()
 
