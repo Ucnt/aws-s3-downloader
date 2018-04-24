@@ -8,6 +8,10 @@ import os
 
 
 def download_bucket_public(bucket):
+    #Create the bucket's base folder before connecting.  Allows for skipping in the future.
+    if not os.path.exists(bucket.output_folder):
+        os.makedirs(bucket.output_folder)
+
     """Scrape the given bucket, including all pages"""
     request = requests.get(bucket.url, verify=False)
 
@@ -70,7 +74,7 @@ def download_files(bucket, keys):
                         print "  Downloading %s" % (url)
                         urllib.urlretrieve(url, file_name)
                         print "    FINISHED"
-                    except IOError:
+                    except Exception as e:
                         print "    FAIL: %s - %s" % (key, e)
                         pass
         else:
@@ -79,10 +83,6 @@ def download_files(bucket, keys):
 
 def save_xml(bucket, xml):
     """Add the given bucket page's XML to the XML output file"""
-    #Create the directory if it doesn't exist
-    if not os.path.exists(bucket.output_folder):
-        os.makedirs(bucket.output_folder)
-
     xml = re.sub(r'<ListBucketResult xmlns=.*">', '', xml).strip()
     xml = xml.replace("</ListBucketResult>","")
 
