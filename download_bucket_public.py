@@ -24,14 +24,21 @@ def download_bucket_public(bucket):
         download_bucket_public(bucket)
 
     else:
+        if bucket.last_key:
+            url = '''{bucket_url}?list-type=2&start-after={last_key}'''.format(bucket_url=bucket.url, last_key=bucket.last_key)
+            request = requests.get(url, verify=False)
+
+        #Print the # keys found and add the page
         print "Total: {num_keys} keys found".format(num_keys=len(re.findall("<Key>(.+?)</Key>", request.text)))
         add_page(bucket, request)
+
 
         #Paginate and save until there is nothing left
         while "<IsTruncated>true</IsTruncated>" in request.text:
             #Get next set of results
             last_key = re.findall("<Key>(.+?)</Key>", request.text)[-1].encode('utf-8')
             url = '''{bucket_url}?list-type=2&start-after={last_key}'''.format(bucket_url=bucket.url, last_key=last_key)
+            print url
             request = requests.get(url, verify=False)
             #Add the next set of results
             add_page(bucket, request)

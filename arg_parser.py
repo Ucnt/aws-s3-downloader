@@ -55,6 +55,13 @@ parser.add_argument(
                     action='append',
                    )
 
+parser.add_argument(
+                    '-lk',
+                    '--last_key',
+                    required=False, 
+                    help="Last Key to skip ahead to",
+                   )
+
 
 parser.add_argument(
                     '-ak',
@@ -69,6 +76,13 @@ parser.add_argument(
                     '--aws_secret_key',
                     required=False, 
                     help="AWS Secret Key",
+                   )
+
+parser.add_argument(
+                    '-q',
+                    '--quiet',
+                    action='store_true',
+                    help="Don't print updates",
                    )
 
 

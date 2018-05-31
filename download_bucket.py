@@ -11,7 +11,7 @@ from download_bucket_auth import *
 
 
 class Bucket():
-    def __init__ (self, bucket_name, url, download, download_include, download_exclude, get_xml, output_folder, aws_access_key, aws_secret_key):
+    def __init__ (self, bucket_name, url, download, download_include, download_exclude, get_xml, output_folder, aws_access_key, aws_secret_key, quiet, last_key):
         self.bucket_name = bucket_name
         self.url = url
         self.download = download
@@ -22,6 +22,8 @@ class Bucket():
         self.output_folder = output_folder
         self.aws_access_key = aws_access_key
         self.aws_secret_key = aws_secret_key
+        self.quiet = quiet
+        self.last_key = last_key
         self.is_truncated = False
         self.num_keys = 0
 
@@ -44,6 +46,8 @@ if __name__ == "__main__":
                              output_folder=output_folder,
                              aws_access_key=args.aws_access_key,
                              aws_secret_key=args.aws_secret_key,
+                             quiet=args.quiet,
+                             last_key=args.last_key
                         )
 
         if bucket.aws_access_key:
