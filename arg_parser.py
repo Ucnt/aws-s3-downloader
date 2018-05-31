@@ -59,7 +59,7 @@ parser.add_argument(
                     '-lk',
                     '--last_key',
                     required=False, 
-                    help="Last Key to skip ahead to",
+                    help="Last Key to skip ahead to if doing public download",
                    )
 
 
