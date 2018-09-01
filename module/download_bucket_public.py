@@ -92,6 +92,7 @@ def save_xml(bucket, xml):
     """Add the given bucket page's XML to the XML output file"""
     xml = re.sub(r'<ListBucketResult xmlns=.*">', '', xml).strip()
     xml = xml.replace("</ListBucketResult>","")
+    xml = xml.replace("<Key>","\n<Key>")
 
     """Save the XML (e.g. page source code) for the bucket"""
     f = open(bucket.xml_output_file, "a+")
