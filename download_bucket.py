@@ -22,7 +22,7 @@ if __name__ == "__main__":
 
         bucket = Bucket(
                              bucket_name=args.bucket_name, 
-                             url="http://{bucket_name}.s3.amazonaws.com/".format(bucket_name=args.bucket_name), 
+                             url="http://{bucket_name}.s3.amazonaws.com".format(bucket_name=args.bucket_name), 
                              download=args.download, 
                              download_include=args.download_include,
                              download_exclude=args.download_exclude,
