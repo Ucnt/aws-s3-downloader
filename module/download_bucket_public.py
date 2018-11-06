@@ -77,7 +77,7 @@ def download_files(bucket, keys):
 
                     #Try to download the file.  Some will fail because they are directories
                     try:
-                        url = '{url}/{key}'.format(url=bucket.url, key=key)
+                        url = '{url}{key}'.format(url=bucket.url, key=key)
                         print "  Downloading %s" % (url)
                         urllib.urlretrieve(url, file_name)
                         print "    FINISHED"
