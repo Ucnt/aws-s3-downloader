@@ -1,5 +1,5 @@
 # Purpose
-Provide a command line ability to download some, or all, of the public files in an AWS S3 bucket as well as all of the XML that lists its contents, whether the key is public or not.
+Provide a command line ability to download some, or all, of the public/authorized users files in an AWS S3 bucket as well as all of the XML that lists its contents, whether the key is public or not.
 
 # Reason
 As I was going through, looking for public AWS S3 buckets that contained PII, I realized that I wanted to be able to download the XML and a subset of data to show companies what data they had exposed.  I didn't want to do this manually and I wanted to be able to have ALL of the XML (AWS paginates S3 content per 1k keys).
