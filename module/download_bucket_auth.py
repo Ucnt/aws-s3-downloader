@@ -9,9 +9,9 @@ def download_bucket_auth(bucket):
 
     conn = S3Connection(bucket.aws_access_key, bucket.aws_secret_key)
     try:
-        print "  connecting to bucket"
+        print("  connecting to bucket")
         bucket_conn = conn.get_bucket(bucket.bucket_name)
-        print "  enumerating keys"
+        print("  enumerating keys")
         for index, key in enumerate(bucket_conn.list()):
 #            if index >= 200000:
 #               break
@@ -28,7 +28,7 @@ def download_bucket_auth(bucket):
                                     os.makedirs(file_name)
                                     os.rmdir(file_name)
                             except Exception as e:
-                                print "    *** Error (%s) on folder creation: %s ***" % (e, file_name)
+                                print("    *** Error (%s) on folder creation: %s ***" % (e, file_name))
                                 continue
                             #Try downloading the file
                             try:
@@ -37,18 +37,18 @@ def download_bucket_auth(bucket):
                                 num_kilobytes = num_bytes/1024
                                 num_megabytes = num_kilobytes/1024
                                 num_gigabytes = num_megabytes/1024
-                                print "  DOWNLOADING: {key_name} ({B} B, {KB} KB, {MB} MB, {GB} GB)".format(key_name=key.name, B=num_bytes, KB=num_kilobytes, MB=num_megabytes, GB=num_gigabytes)
+                                print("  DOWNLOADING: {key_name} ({B} B, {KB} KB, {MB} MB, {GB} GB)".format(key_name=key.name, B=num_bytes, KB=num_kilobytes, MB=num_megabytes, GB=num_gigabytes))
                                 key.get_contents_to_filename(file_name)
-                                print "      FINISHED"
+                                print("      FINISHED")
                             except Exception as e:
                                 if "Access Denied" in str(e):
-                                    print "    FAIL: %s - Access Denied" % (key.name)
+                                    print("    FAIL: %s - Access Denied" % (key.name))
                                 else:
-                                    print "    FAIL: %s - %s" % (key.name, str(e).strip())
+                                    print("    FAIL: %s - %s" % (key.name, str(e).strip()))
                         else:
-                            print "  already downloaded {file_name}".format(file_name=file_name)
+                            print("  already downloaded {file_name}".format(file_name=file_name))
     except Exception as e:
-        print "    *** Error: %s ***" % (str(e).strip())
+        print("    *** Error: %s ***" % (str(e).strip()))
 
 
 def save_xml(bucket, key_name):
