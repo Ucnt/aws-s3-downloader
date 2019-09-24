@@ -3,7 +3,7 @@
 
 
 class Bucket():
-    def __init__ (self, bucket_name, url, download, download_include, download_exclude, get_xml, output_folder, aws_access_key, aws_secret_key, quiet, last_key):
+    def __init__(self, bucket_name, url, download, download_include, download_exclude, get_xml, output_folder, aws_access_key, aws_secret_key, quiet, last_key):
         self.bucket_name = bucket_name
         self.url = url
         self.download = download
