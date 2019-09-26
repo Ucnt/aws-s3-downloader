@@ -7,6 +7,7 @@ requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 import os
 from tqdm import tqdm
 from joblib import Parallel, delayed
+import multiprocessing
 
 
 def download_bucket_public(bucket):
@@ -88,7 +89,7 @@ def download_file(bucket, key):
 
 def download_files(bucket, keys):
     """Download the subset of bucket keys.  This will download inaccessible files as XML output"""
-    Parallel(n_jobs=32)(delayed(download_file)(bucket, key) for key in tqdm(keys))
+    Parallel(n_jobs=multiprocessing.cpu_count()*4)(delayed(download_file)(bucket, key) for key in tqdm(keys))
 
 
 def save_xml(bucket, xml):
