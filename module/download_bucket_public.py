@@ -8,6 +8,7 @@ import os
 from tqdm import tqdm
 from joblib import Parallel, delayed
 import multiprocessing
+import pickle
 
 
 def download_bucket_public(bucket):
@@ -18,6 +19,8 @@ def download_bucket_public(bucket):
     """Scrape the given bucket, including all pages"""
     request = requests.get(bucket.url, verify=False)
 
+    keysfilename = "".join(x for x in bucket.url if x.isalnum()) + ".p"
+
     #Be sure you are at the correct url.
     #Sometimes https://s3.amazonaws.com/foo redirects to https://foo.s3.amazonaws.com/
     if "<Endpoint>" in request.text:
@@ -27,26 +30,30 @@ def download_bucket_public(bucket):
         download_bucket_public(bucket)
 
     else:
-        if bucket.last_key:
-            url = '''{bucket_url}?list-type=2&start-after={last_key}'''.format(bucket_url=bucket.url, last_key=bucket.last_key)
-            request = requests.get(url, verify=False)
+        if os.path.exists(keysfilename):
+            keys = pickle.load(open(keysfilename, "rb"))
+        else:
+            if bucket.last_key:
+                url = '''{bucket_url}?list-type=2&start-after={last_key}'''.format(bucket_url=bucket.url, last_key=bucket.last_key)
+                request = requests.get(url, verify=False)
 
-        #Print the # keys found and add the page
-        print("Total: {num_keys} keys found".format(num_keys=len(re.findall("<Key>(.+?)</Key>", request.text))))
-        add_page(bucket, request)
+            #Print the # keys found and add the page
+            print("Total: {num_keys} keys found".format(num_keys=len(re.findall("<Key>(.+?)</Key>", request.text))))
+            add_page(bucket, request)
 
-        keys = []
-        #Paginate and save until there is nothing left
-        while "<IsTruncated>true</IsTruncated>" in request.text:
-            #Get next set of results
-            last_key = re.findall("<Key>(.+?)</Key>", request.text)[-1]
-            url = '''{bucket_url}?list-type=2&start-after={last_key}'''.format(bucket_url=bucket.url, last_key=last_key)
-            print(url)
-            request = requests.get(url, verify=False)
-            #Add the next set of results
-            keys.extend(add_page(bucket, request))
-            print("Total: {num_keys} keys found".format(num_keys=bucket.num_keys))
+            keys = []
+            #Paginate and save until there is nothing left
+            while "<IsTruncated>true</IsTruncated>" in request.text:
+                #Get next set of results
+                last_key = re.findall("<Key>(.+?)</Key>", request.text)[-1]
+                url = '''{bucket_url}?list-type=2&start-after={last_key}'''.format(bucket_url=bucket.url, last_key=last_key)
+                print(url)
+                request = requests.get(url, verify=False)
+                #Add the next set of results
+                keys.extend(add_page(bucket, request))
+                print("Total: {num_keys} keys found".format(num_keys=bucket.num_keys))
 
+            pickle.dump(keys, open(keysfilename, "wb"))
         download_files(bucket, keys)
 
         #Close the XML file, if it is being created
@@ -81,7 +88,7 @@ def download_file(bucket, key):
                     url = '{url}{key}'.format(url=bucket.url, key=key)
                     urllib.request.urlretrieve(url, file_name)
                 except Exception as e:
-                    print("    FAIL: %s - %s" % (url, key, e))
+                    print(f"    FAIL: {url} {key} {e}")
                     pass
     else:
         print("  already downloaded {file_name}".format(file_name=file_name))
