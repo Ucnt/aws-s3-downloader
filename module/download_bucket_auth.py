@@ -18,7 +18,7 @@ def download_bucket_auth(bucket):
             if bucket.get_xml:
                 save_xml(bucket=bucket, key_name=key.name)
             if bucket.download:
-                file_name = '{output_folder}/{key}'.format(output_folder=bucket.output_folder, key=key.name.encode('utf-8').strip()).strip()
+                file_name = '{output_folder}/{key}'.format(output_folder=bucket.output_folder, key=key.name.strip()).strip()
                 if not bucket.download_include or any(include.lower() in key.name.lower() for include in bucket.download_include):
                     if not bucket.download_exclude or not any(exclude.lower() in key.name.lower() for exclude in bucket.download_exclude):
                         if not os.path.exists(file_name):
@@ -62,6 +62,6 @@ def save_xml(bucket, key_name):
     try:
         f.write('''%s\n''' % (key_name))
     except:
-        f.write('''%s\n''' % (key_name.encode('utf-8').strip()))
-        f.write('''%s\n''' % (key_name.encode('utf-8').strip()))
+        f.write('''%s\n''' % (key_name.strip()))
+        f.write('''%s\n''' % (key_name.strip()))
         f.close()
