@@ -37,21 +37,22 @@ def download_bucket_public(bucket):
                 url = '''{bucket_url}?list-type=2&start-after={last_key}'''.format(bucket_url=bucket.url, last_key=bucket.last_key)
                 request = requests.get(url, verify=False)
 
-            #Print the # keys found and add the page
-            print("Total: {num_keys} keys found".format(num_keys=len(re.findall("<Key>(.+?)</Key>", request.text))))
-            add_page(bucket, request)
-
             keys = []
-            #Paginate and save until there is nothing left
-            while "<IsTruncated>true</IsTruncated>" in request.text:
-                #Get next set of results
-                last_key = re.findall("<Key>(.+?)</Key>", request.text)[-1]
-                url = '''{bucket_url}?list-type=2&start-after={last_key}'''.format(bucket_url=bucket.url, last_key=last_key)
-                print(url)
-                request = requests.get(url, verify=False)
-                #Add the next set of results
+            if "<IsTruncated>true</IsTruncated>" not in request.text:
                 keys.extend(add_page(bucket, request))
-                print("Total: {num_keys} keys found".format(num_keys=bucket.num_keys))
+            else:
+                #Paginate and save until there is nothing left
+                while "<IsTruncated>true</IsTruncated>" in request.text:
+                    #Get next set of results
+                    last_key = re.findall("<Key>(.+?)</Key>", request.text)[-1]
+                    url = '''{bucket_url}?list-type=2&start-after={last_key}'''.format(bucket_url=bucket.url, last_key=last_key)
+                    print(url)
+                    request = requests.get(url, verify=False)
+                    #Add the next set of results
+                    keys.extend(add_page(bucket, request))
+                    print("Running: {num_keys} keys found".format(num_keys=bucket.num_keys))
+
+            print("Total: {num_keys} keys found".format(num_keys=len(re.findall("<Key>(.+?)</Key>", request.text))))
 
             pickle.dump(keys, open(keysfilename, "wb"))
         download_files(bucket, keys)
@@ -66,7 +67,7 @@ def add_page(bucket, request):
     bucket.num_keys += len(keys)
 
     if bucket.get_xml:
-        save_xml(bucket=bucket, xml=request.text.replace('<?xml version="1.0" encoding="UTF-8"?>','').encode('utf-8'))
+        save_xml(bucket=bucket, xml=request.text.replace('<?xml version="1.0" encoding="UTF-8"?>',''))
     if bucket.download:
         return keys
 
@@ -82,10 +83,9 @@ def download_file(bucket, key):
                     os.makedirs(file_name)
                     os.rmdir(file_name)
 
-
                 #Try to download the file.  Some will fail because they are directories
                 try:
-                    url = '{url}{key}'.format(url=bucket.url, key=key)
+                    url = '{url}{key}'.format(url=bucket.url, key=urllib.parse.quote(key))
                     urllib.request.urlretrieve(url, file_name)
                 except Exception as e:
                     print(f"    FAIL: {url} {key} {e}")
