@@ -35,7 +35,7 @@ def download_bucket_public(bucket):
         else:
             if bucket.last_key:
                 url = '''{bucket_url}?list-type=2&start-after={last_key}'''.format(bucket_url=bucket.url, last_key=bucket.last_key)
-                request = requests.get(url, verify=False)
+                request = requests.get(url)
 
             keys = []
             if "<IsTruncated>true</IsTruncated>" not in request.text:
@@ -47,7 +47,7 @@ def download_bucket_public(bucket):
                     last_key = re.findall("<Key>(.+?)</Key>", request.text)[-1]
                     url = '''{bucket_url}?list-type=2&start-after={last_key}'''.format(bucket_url=bucket.url, last_key=last_key)
                     print(url)
-                    request = requests.get(url, verify=False)
+                    request = requests.get(url)
                     #Add the next set of results
                     keys.extend(add_page(bucket, request))
                     print("Running: {num_keys} keys found".format(num_keys=bucket.num_keys))
