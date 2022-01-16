@@ -17,7 +17,7 @@ def download_bucket_public(bucket):
         os.makedirs(bucket.output_folder)
 
     """Scrape the given bucket, including all pages"""
-    request = requests.get(bucket.url, verify=False)
+    request = requests.get(bucket.url)
 
     keysfilename = "".join(x for x in bucket.url if x.isalnum()) + ".p"
 
