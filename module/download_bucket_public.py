@@ -106,7 +106,7 @@ def save_xml(bucket, xml):
     xml = xml.replace("<Key>","\n<Key>")
 
     """Save the XML (e.g. page source code) for the bucket"""
-    f = open(bucket.xml_output_file, "a+")
+    f = open(bucket.xml_output_file, "a+", encoding="utf-8")
     if not f.read(1):
         f.write('''<?xml version="1.0" encoding="UTF-8"?><ListBucketResult>''')
     f.seek(0,2)    #Windows Fix
