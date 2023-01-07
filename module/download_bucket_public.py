@@ -68,6 +68,7 @@ def add_page(bucket, request):
 
     if bucket.get_xml:
         save_xml(bucket=bucket, xml=request.text.replace('<?xml version="1.0" encoding="UTF-8"?>',''))
+        return keys
     if bucket.download:
         return keys
 
