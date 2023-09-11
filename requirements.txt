@@ -1,3 +1,4 @@
 boto
 tqdm
 joblib
+requests
